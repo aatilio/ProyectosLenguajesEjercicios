@@ -1,2 +1,2 @@
-# Univercidad
+# Universidad
 Todos los codigos de ejercicios y algunos proyectos que estoy avansando
