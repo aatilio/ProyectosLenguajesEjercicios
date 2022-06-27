@@ -11,6 +11,7 @@
 <body>
     <?php
     // si formulario no se envio lo muestra
+    //Ejercicio de suma de numero s impares entre el rango de 7 a 700, cualquiera
     if (!isset($_POST['btnEnvia'])) {
     ?>
         <form method="post" action="1.php">
