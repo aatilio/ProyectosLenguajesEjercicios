@@ -1,0 +1,23 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31624.102
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "Polimorfismo_Python", "Polimorfismo_Python.pyproj", "{28FAF1EC-BD18-4505-9789-8D31A9B636B9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{28FAF1EC-BD18-4505-9789-8D31A9B636B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{28FAF1EC-BD18-4505-9789-8D31A9B636B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E2A7B5E9-9CDF-4892-B565-18D0D24B7429}
+	EndGlobalSection
+EndGlobal
