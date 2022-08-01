@@ -46,7 +46,7 @@ Create table AUTOMOVILES(
 PLACA_AUT	varchar(7)		not null,
 MARCA		varchar(30)		not null,
 MODELO		varchar(30)		not null,
-AÑO			int				not null,
+Aï¿½O			int				not null,
 COLOR		varchar(15)		not null,
 ID_CONC		varchar(3)		not null,
 
@@ -110,9 +110,6 @@ SELECT * FROM AUTOMOVILES WHERE MARCA = 'KIA'
 SELECT * FROM MECANICOS WHERE PROFESION = 'ING'
 
 SELECT SUM(COSTE) AS TOTAL_INGRESOS FROM REPARACIONES
-
-
-
 
 select * into REPARACIONES2 from REPARACIONES
 
