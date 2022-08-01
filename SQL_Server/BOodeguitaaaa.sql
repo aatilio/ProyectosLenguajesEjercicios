@@ -109,9 +109,212 @@ INSERT INTO VENTA VALUES(47,7,123,15);
 
 
 --creacion de una vista para que sea mas facil ver el resultado guardado
+
 create view vi_1
 as
 select * from PRODUCTO
 where id_producto=9
 
 select * from vi_1
+
+-----------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------
+------------------CREAR PROCEDIMIENTOS ALMACENADOS DE VISUALISACION DE DATOS-------------------------
+-----------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------
+
+--tabla clientes 
+CREATE PROCEDURE usp_ver_clientes
+AS
+	SELECT * FROM CLIENTE
+
+--EJECUTAR EL PROCEDIMIENTO ALMACENADO
+
+EXEC usp_ver_clientes
+
+--tabla clientes 
+CREATE PROCEDURE usp_ver_productos
+AS
+	SELECT * FROM PRODUCTO
+
+--EJECUTAR EL PROCEDIMIENTO ALMACENADO
+
+EXEC usp_ver_productos
+
+--tabla ventas 
+CREATE PROCEDURE usp_ver_ventas
+AS
+	SELECT * FROM CLIENTE
+
+--EJECUTAR EL PROCEDIMIENTO ALMACENADO
+
+EXEC usp_ver_ventas
+
+--------------------------------------------------------------------------------------------------------------------
+--Para poder visualisar de forma clara las instrucciones de un procedimiento guardado para luego poder editarlo.
+
+sp_helptext usp_ver_clientes
+
+
+---------------------------------------------------------------------------
+--CREAR UN PROCEDIMIENTO ALMACENADO DE INSERCION DE DATOS, CON PARAMETROS
+---------------------------------------------------------------------------
+
+create procedure usp_nuevo_producto
+--creamos los parametros segun su tipo de dato de la tabla
+@xid_producto int,
+@xdescripcion varchar(200),
+@cprescio int
+as
+	insert into PRODUCTO(id_producto, 
+						descripcion, 
+						precio) 
+				values(@xid_producto,
+						@xdescripcion,
+						@cprescio);
+go
+
+--INSERTAMOS LOS DATOS LLAMANDO AL PROCEDIMIENTO CREADO
+
+EXEC usp_nuevo_producto 16,'Cola Escosesa',8
+
+--vemos la tabla que se inserto correctamente los datos
+select * from PRODUCTO
+
+
+------------------------------------------------------------------------------
+--CREAR UN PROCEDIMIENTO ALMACENADO DE ACTUALISACION DE DATOS, CON PARAMETROS
+------------------------------------------------------------------------------
+
+CREATE PROCEDURE usp_actualizar_producto
+@xid_producto int,
+@xdescripcion varchar(200),
+@xprecio int
+as
+
+	UPDATE PRODUCTO SET descripcion = @xdescripcion,
+						precio = @xprecio
+					WHERE id_producto = @xid_producto;
+go
+
+--ejecutamos el procedure pasandole el id del producto
+
+EXEC usp_actualizar_producto 16,'Cola escocesa de 2.5 litros',9;
+
+------------------------------------------------------------------------------
+--CREAR UN PROCEDIMIENTO ALMACENADO DE ELIMINACION DE DATOS, CON PARAMETROS
+------------------------------------------------------------------------------
+
+CREATE PROCEDURE usp_eliminar_producto
+@xid_producto int
+as
+	DELETE FROM PRODUCTO WHERE id_producto = @xid_producto;
+go
+
+--ejecutamos el procedure pasandole el id del producto
+
+EXEC usp_eliminar_producto 16;
+
+
+-----------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------
+---------------------------------------------------CREACION DE TRIGGER ------------------------------
+-----------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------
+
+
+--creamos una tabla nueva llamada hostorial para hacer pruevas con trigger
+Create table historial
+(fecha date,
+id_producto int,
+descripcion varchar(100),
+usuario varchar(30))
+
+
+select * from historial
+select * from PRODUCTO
+
+-----------------------------------------------------------------------------------------------------
+---------------------------------------------------- INSERTAR REGISTROS EN LA TABLA PRODUCTO 
+-----------------------------------------------------------------------------------------------------
+create trigger TR_Insertado
+on producto for insert
+as
+--set nocount on		--esta instruccion sirve para ocultar que la ejecucion del trigger en la consolo de resultados
+declare @id_producto int
+select @id_producto = id_producto from inserted
+
+insert into historial values
+(getdate(),@id_producto, 'registro insertado', system_user)
+
+--al insertar nuevos productos en la tabla productos tambien registramos en la tabla historial el codigo de producto y la fecha de insercion
+insert into producto values(17,'Red Bull',60)
+insert into producto values(18,'Gatorade',50)
+
+
+-----------------------------------------------------------------------------------------------------
+--------------------------------------------- BORRAR REGISTROS EN LA TABLA PRODUCTO 
+-----------------------------------------------------------------------------------------------------
+alter trigger TR_Borrado
+on producto for delete
+as
+set nocount on
+declare @id_producto int
+select @id_producto = id_producto from deleted
+
+insert into historial values
+(getdate(),@id_producto, 'produnto eliminado', system_user)
+go
+
+--vemos las tablas con sus respectivos registros
+select * from historial
+select * from producto
+--llamamos a la instruccion delete con normalidad
+delete from producto where id_producto = 17
+delete from producto where id_producto = 18
+
+-----------------------------------------------------------------------------------------------------
+--------------------------------------------- ACTUALIZAR REGISTROS EN LA TABLA PRODUCTO 
+-----------------------------------------------------------------------------------------------------
+
+create trigger TR_Actualiza
+on producto for update
+as
+--- set nocount on
+declare @id_producto int
+select @id_producto = id_producto from inserted
+
+insert into historial values
+(getdate(),@id_producto, 'Producto actualizado',system_user)
+go
+
+--llamamos  a la intruccin UPDAETE, en la tabla productos 
+update producto set descripcion ='Kola escocesa, 2.5 litros'
+where id_producto = 16
+
+
+------------------------------------------------------------------------------------------------------------
+--- HACER QUE SE RESTE AUTOMATICAMENTE EL NUEMRO DE PRODUCTOS DE LA TABLA DEL MISMO NOMBRE CON LA DE VENTAS 
+------------------------------------------------------------------------------------------------------------
+
+select * from historial
+select * from VENTA
+
+
+create trigger TR_Venta1
+on venta for insert
+AS
+declare @id_producto int
+
+
+update ARTICULO set ARTICULO.STOCK =
+ARTICULO.STOCK - inserted.cantidad
+from inserted inner join ARTICULO
+on ARTICULO.id_articulo = inserted.id_producto
+insert into historial values(getdate(),
+@id_producto, 'registro actualizado',
+system_user)
+
+insert into VENTA values(51, 5, 123, 8, '2021-
+07-19')
+---update producto set descrip
